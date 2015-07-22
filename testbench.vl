@@ -2,4 +2,19 @@ module Top();
 
 	reg North, South, West, East, startState;
 
+
+	FSM Test1(North, South, West, East, startState);
+	
+	initial
+		begin
+
+
+			#10
+			finish;
+		end
+
+	initial
+		begin
+			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nstartState=%b, \ntime=%t", North, South, West, East, startState, $time);
+		end
 endmodule;
