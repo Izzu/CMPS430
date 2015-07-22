@@ -1,0 +1,6 @@
+module FSM(N, S, W, E, State);
+	
+	input reg N, S, W, E;
+	output State;
+
+endmodule;

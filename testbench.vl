@@ -1,0 +1,5 @@
+module Top();
+
+	reg North, South, West, East, startState;
+
+endmodule;
