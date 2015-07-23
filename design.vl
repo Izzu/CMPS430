@@ -1,6 +1,45 @@
-module FSM(N, S, W, E, State);
+module FSM(N, S, W, E, start, wait, state);
 	
-	input reg N, S, W, E;
-	output State;
+	input N, S, W, E, start, wait;
+	output state;
+	reg[1:0] cState, nState, wTime, skip;
+	parameter RR=0, GR=1, YR=2, RR2=3, RG=4, RY=5; 	//1st letter is for N & S, 2nd is for W & E
+
+	always@(state | start | wTime | skip)
+		begin:Caluculate_Next_State
+			case(state)
+				RR:begin
+					if(start)
+						nState = GR;
+					else
+						nState = RR;
+					end
+
+				GR:begin
+					nState = YR;
+					end
+
+				YR:begin
+					if(skip)
+						
+					nState = RR2;
+					end
+
+				RR2:begin
+					nState = RG;
+					end
+
+				RG:begin
+					nState = RY;
+					end
+
+				RY:begin
+					nState = RR;
+					end
+
+				default: nState = RR;
+			endcase
+		end
+
 
 endmodule;

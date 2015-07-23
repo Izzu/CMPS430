@@ -1,10 +1,8 @@
 module Top();
 
-	reg North, South, West, East, startState;
+	reg North, South, West, East, GO, waitTime, currState;
 
-
-	FSM Test1(North, South, West, East, startState);
-	
+	FSM Test1(North, South, West, East, GO, waitTime, currState);
 	initial
 		begin
 
@@ -15,6 +13,6 @@ module Top();
 
 	initial
 		begin
-			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nstartState=%b, \ntime=%t", North, South, West, East, startState, $time);
+			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nGO=%b, \nwaitTime=%b, \ncurrState=%b, \ntime=%t", North, South, West, East, GO, waitTime, currState, $time);
 		end
 endmodule;
