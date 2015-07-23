@@ -14,8 +14,8 @@ module FSM(N, S, W, E, start, maxCar state);
 					end
 
 				GR:begin
-					if(maxCar) nState = RR2;
-					else nState = YR;
+					if(maxCar) nState = YR;
+					else nState = GG;
 					end
 
 				YR:begin
@@ -27,7 +27,8 @@ module FSM(N, S, W, E, start, maxCar state);
 					end
 
 				RG:begin
-					nState = RY;
+					if(maxCar) nState = RG;
+					else nState = RY;
 					end
 
 				RY:begin
