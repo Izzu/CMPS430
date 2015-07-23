@@ -1,8 +1,10 @@
 module Top();
 
-	reg North, South, West, East, GO, maxCars, currState;
+	reg North, South, West, East, GO, maxCars, sNS, sWE;
 
-	FSM Test1(North, South, West, East, GO, maxCars, currState);
+	reg [3:0]currState;
+
+	FSM Test1(North, South, West, East, GO, maxCars, sNS, sWE, currState);
 	initial
 		begin
 
@@ -13,6 +15,6 @@ module Top();
 
 	initial
 		begin
-			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nGO=%b, \nmaxCars=%b, \ncurrState=%b, \ntime=%t", North, South, West, East, GO, maxCars, currState, $time);
+			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nGO=%b, \nmaxCars=%b, \nsNS=%b, \nsWE=%b, \ncurrState=%3b, \ntime=%t", North, South, West, East, GO, maxCars, sNS, sWE, currState, $time);
 		end
 endmodule;

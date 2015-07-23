@@ -1,4 +1,4 @@
-module FSM(N, S, W, E, start, maxCar, state);
+module FSM(N, S, W, E, start, maxCar, s1, s2, state);
 	
 	input N, S, W, E, start, maxCar;
 	output [2:0]state;
