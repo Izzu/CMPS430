@@ -2,7 +2,7 @@ module Top();
 
 	reg North, South, West, East, GO, maxCars, sNS, sWE;
 
-	reg [3:0]currState;
+	reg [2:0]currState;
 
 	FSM Test1(North, South, West, East, GO, maxCars, sNS, sWE, currState);
 	initial

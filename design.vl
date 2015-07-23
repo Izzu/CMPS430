@@ -43,13 +43,13 @@ module FSM(N, S, W, E, start, maxCar, s1, s2, state);
 	always@(state)
 		begin:PrintOut
 			case(state)
-				'RR: state = 4'b0000;
-				'GR: state = 4'b0001;
-				'YR: state = 4'b0010;
-				'RR2: state = 4'b0011;
-				'RG: state = 4'b0100;
-				'RY: state = 4'b0101;
-				default: state = 4'b1111;
+				'RR: state = 3'b000;
+				'GR: state = 3'b001;
+				'YR: state = 3'b010;
+				'RR2: state = 3'b011;
+				'RG: state = 3'b100;
+				'RY: state = 3'b101;
+				default: state = 3'b111;
 			endcase
 		end
 
