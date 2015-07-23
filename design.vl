@@ -1,12 +1,12 @@
-module FSM(N, S, W, E, start, maxCar, s1, s2, state);
+module FSM(N, S, W, E, start, maxCar, s1, s2, wait, reset, state);
 	
-	input N, S, W, E, start, maxCar;
+	input N, S, W, E, start, maxCar, s1, s2, wait, reset;
 	output [2:0]state;
 	reg[2:0]state;
 	reg[1:0] cState, nState;
 	parameter RR=0, GR=1, YR=2, RR2=3, RG=4, RY=5; 	//1st letter is for N & S, 2nd is for W & E
 
-	always@(state or start or maxCar)
+	always@(state or start or maxCar or wait)
 		begin:Caluculate_Next_State
 			case(cState)
 				RR:begin
@@ -16,6 +16,7 @@ module FSM(N, S, W, E, start, maxCar, s1, s2, state);
 
 				GR:begin
 					if(maxCar) nState = YR;
+					elseif(wait) nState = GR;
 					else nState = GG;
 					end
 
@@ -28,7 +29,8 @@ module FSM(N, S, W, E, start, maxCar, s1, s2, state);
 					end
 
 				RG:begin
-					if(maxCar) nState = RG;
+					if(maxCar) nState = RY;
+					elseif(wait) nState = RG;
 					else nState = RY;
 					end
 
@@ -40,9 +42,15 @@ module FSM(N, S, W, E, start, maxCar, s1, s2, state);
 			endcase
 		end
 
+	always@(posedge wait or posedge reset)
+		begin:RegGen
+			if(reset) state = RR;
+			else state = nState;
+		end
+
 	always@(state)
 		begin:PrintOut
-			case(state)
+			case(cState)
 				'RR: state = 3'b000;
 				'GR: state = 3'b001;
 				'YR: state = 3'b010;
