@@ -1,14 +1,13 @@
-module FSM(N, S, W, E, start, maxCar, state);
+module FSM(N, S, W, E, start, maxCar state);
 	
 	input N, S, W, E, start, maxCar;
-	output [2:0]state;
-	reg[2:0]state;
+	output state;
 	reg[1:0] cState, nState;
 	parameter RR=0, GR=1, YR=2, RR2=3, RG=4, RY=5; 	//1st letter is for N & S, 2nd is for W & E
 
 	always@(state or start or maxCar)
 		begin:Caluculate_Next_State
-			case(cState)
+			case(state)
 				RR:begin
 					if(start) nState = GR;
 					else nState = RR;
@@ -40,17 +39,5 @@ module FSM(N, S, W, E, start, maxCar, state);
 			endcase
 		end
 
-	always@(state)
-		begin:PrintOut
-			case(state)
-				'RR: state = 4'b0000;
-				'GR: state = 4'b0001;
-				'YR: state = 4'b0010;
-				'RR2: state = 4'b0011;
-				'RG: state = 4'b0100;
-				'RY: state = 4'b0101;
-				default: state = 4'b1111;
-			endcase
-		end
 
 endmodule;
