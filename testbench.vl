@@ -1,8 +1,9 @@
 module Top();
-
+	//we might need twio maxcars variables to represent eN/S and E/W
 	reg North, South, West, East, GO, maxCars, sNS, sWE;
 
 	reg [2:0]currState;
+	reg clk;
 
 	FSM Test1(North, South, West, East, GO, maxCars, sNS, sWE, currState);
 	initial
@@ -13,6 +14,23 @@ module Top();
 			finish;
 		end
 
+	//Reset and clock section
+	initial begin
+		clk = 0; rst=0;
+		#rst = 1;
+		#200 rst = 0;
+	end
+	always #50 clk = ~clk //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
+
+	//specift the input waveforms for maxCars
+	intial begin
+		maxCars =0;
+		#1; //Delay to keep inputs from, changing on clock edge
+		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
+		//                     #400 maxCars = 0; at 400 mroe cycl;es maxCars is 0
+
+		$finish // end simulation
+	end
 	initial
 		begin
 			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nGO=%b, \nmaxCars=%b, \nsNS=%b, \nsWE=%b, \ncurrState=%3b, \ntime=%t", North, South, West, East, GO, maxCars, sNS, sWE, currState, $time);
