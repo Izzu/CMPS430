@@ -1,19 +1,18 @@
 module Top();
-	//we might need twio maxcars variables to represent eN/S and E/W
-	reg North, South, West, East, GO, maxCars, sNS, sWE;
+	reg GO, maxCarsNS, maxCarsEW, sNS, sWE;
 
 	reg [2:0]currState;
 	reg clk;
 
-	FSM Test1(North, South, West, East, GO, maxCars, sNS, sWE, currState);
-	initial
+	FSM Test1(GO, maxCarsNS, maxCarsEW sNS, sWE,rst,ss clk, currState);
+	/*initial
 		begin
 
 
 			#10
 			finish;
 		end
-
+	*/
 	//Reset and clock section
 	initial begin
 		clk = 0; rst=0;
@@ -24,15 +23,21 @@ module Top();
 
 	//specift the input waveforms for maxCars
 	intial begin
-		maxCars =0;
+		//intially no traffic
+		maxCarsNS = 0;
+		maxCarsEW = 0;
 		#1; //Delay to keep inputs from, changing on clock edge
 		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
-		//                     #400 maxCars = 0; at 400 mroe cycl;es maxCars is 0
+		//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
+		#600 maxCarsNS =1; //NS has traffic EW doesn't
+		#500 maxCarsEW = 1; maxCarsNS =0; //Now EW has traffic and NS doesnt
+
+		#1000 maxCarsNS =1; maxCarsEW =1; // traffic on both sides!
 
 		$finish // end simulation
 	end
 	initial
 		begin
-			$monitor("\nNorth=%b, \nSouth=%b, \nWest=%b, \nEast=%b, \nGO=%b, \nmaxCars=%b, \nsNS=%b, \nsWE=%b, \ncurrState=%3b, \ntime=%t", North, South, West, East, GO, maxCars, sNS, sWE, currState, $time);
+			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsWE=%b,\nrst=%b, \ncurrState=%3b, \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sWE,rst, currState, $time);
 		end
 endmodule;
