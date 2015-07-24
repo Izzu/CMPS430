@@ -1,51 +1,62 @@
-module FSM(N, S, W, E, start, maxCar, s1, s2, wait, reset, state);
+module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, violated, state, violation);
 	
-	input N, S, W, E, start, maxCar, s1, s2, wait, reset;
+	input start, maxCar, s1, s2, reset, clock, violated;
 	output [2:0]state;
+	output violation;
 	reg[2:0]state;
 	reg[1:0] cState, nState;
 	parameter RR=0, GR=1, YR=2, RR2=3, RG=4, RY=5; 	//1st letter is for N & S, 2nd is for W & E
 
-	always@(state or start or maxCar or wait)
+	always@(state or start or maxCar)
 		begin:Caluculate_Next_State
 			case(cState)
 				RR:begin
 					if(start) nState = GR;
 					else nState = RR;
+					if(violated) violation = 1;
+					else violation = 0;
 					end
 
 				GR:begin
-					if(maxCar) nState = YR;
-					elseif(wait) nState = GR;
-					else nState = GG;
+					nState = YR;
+					if(maxCarWE) clock = ~clock; 
+					if(violated) violation = 1;
+					else violation = 0;
 					end
 
 				YR:begin
 					nState = RR2;
+					if(violated) violation = 1;
+					else violation = 0;
 					end
 
 				RR2:begin
 					nState = RG;
+					if(violated) violation = 1;
+					else violation = 0;
 					end
 
 				RG:begin
-					if(maxCar) nState = RY;
-					elseif(wait) nState = RG;
-					else nState = RY;
+					nState = RY;
+					if(maxCarWE) clock = ~clock;
+					if(violated) violation = 1;
+					else violation = 0; 
 					end
 
 				RY:begin
 					nState = RR;
+					if(violated) violation = 1;
+					else violation = 0;
 					end
 
 				default: nState = RR;
 			endcase
 		end
 
-	always@(posedge wait or posedge reset)
+	always@(posedge clock or posedge reset)
 		begin:RegGen
 			if(reset) state = RR;
-			else state = nState;
+			else cState = nState;
 		end
 
 	always@(state)
