@@ -1,56 +1,58 @@
 module Top();
 	reg GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, picture1, picture2;
-	reg [2:0]currState;
+  reg [2:0]currState, nextState, crrState;
 
-	FSM Test1(GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1,picture2);
+  FSM Test1(GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState, crrState);
 
 	//Reset and clock section
 	initial begin
 		clk = 0; rst=0;
-		#1 rst = 1;
-		#200 rst = 0;
+		#50000 rst = 1;
+		#1 rst = 0;
 	end
 
-	always #3000000000 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
+	always #50 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
 
 	//specift the input waveforms for maxCars
 	initial 
-		begin
-			//intially no traffic
-			maxCarsNS = 0;
-			maxCarsEW = 0;
-			sNS = 0;
-			sEW =0;
+      begin
+        GO = 1;
+        #1;
+		//intially no traffic
+		maxCarsNS = 0;
+		maxCarsEW = 0;
+		sNS = 0;
+		sEW =0;
 
-			#1; //Delay to keep inputs from, changing on clock edge
+		#1; //Delay to keep inputs from, changing on clock edge
 
 
-			//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
-			//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
+		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
+		//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
 
-			#5000000000
-			maxCarsNS = $random; 
-			maxCarsEW = $random;
-			sNS = $random;
-			sEW = $random;
+		#500
+		maxCarsNS = $random; 
+		maxCarsEW = $random;
+		sNS = $random;
+		sEW = $random;
 
-			#5000000000
-			maxCarsEW = $random; 
-			maxCarsNS = $random; 
-			sNS = $random;
-			sEW = $random;
+		#300
+		maxCarsEW = $random; 
+		maxCarsNS = $random; 
+		sNS = $random;
+		sEW = $random;
 
-			#5000000000
-			maxCarsNS = $random; 
-			maxCarsEW = $random;
-			sNS = $random;
-			sEW = $random;
-
-			$finish; // end simulation
-		end
+		#100
+		maxCarsNS = $random; 
+		maxCarsEW = $random;
+		sNS = $random;
+		sEW = $random;
+        
+		$finish; // end simulation
+	end
 
 	initial
 		begin
-			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsEW=%b, \nrst=%b, \nclk=%b, \ncurrState=%3b, \npicture1=%b,  picture2=%b, \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1,picture2, $time);
+			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsEW=%b, \nrst=%b, \nclk=%b, \ncurrState=%3b, \npicture1=%b,  picture2=%b, nextState=%3b \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState, $time);
 		end
 endmodule;

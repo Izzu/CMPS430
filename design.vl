@@ -1,17 +1,21 @@
-module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2);
+module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2, nState, cState);
 	
 	input start, maxCarNS, maxCarWE, s1, s2, reset, clock;
-	output [2:0]state;
+  output [2:0]state, nState, cState;
 	output p1, p2;
-	reg[2:0]state;
-	reg cState, nState, weJustWent=0;
-	parameter RR=0, GR=1, YR=2, RR2=3, RG=4, RY=5; 	//1st letter is for N & S, 2nd is for W & E
+  reg[2:0]state, cState, nState;
+	reg weJustWent=0, NSmax=0, WEmax=0, p1, p2;
+	parameter RR=3'b000, GR=3'b001, YR=3'b010, RR2=3'b011, RG=3'b100, RY=3'b101; 	//1st letter is for N & S, 2nd is for W & E
 
-	always@(state or start or maxCarNS, maxCarWE)
+  always@(cState or start or maxCarNS, maxCarWE or s1 or s2)
 		begin:Caluculate_Next_State
 			case(cState)
 				//NS = red, WE = red
 				RR:begin
+                  if(start)
+                  	nState=GR;
+                  else
+                    nState=RR;
 					if(start)
 						if(!weJustWent)		//if WE just went then always let NS go					
 							if(maxCarWE) 
@@ -38,7 +42,7 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2);
 					nState = YR;
 					weJustWent = 0;
 					if(maxCarWE) 
-						clock = ~clock;  //Change the clock and go to next state when there is traffic
+						WEmax = 1;
 					if(s1) 
 						p2 = 1;		//if car WE violates traffic law turn picture sensor on
 					else 
@@ -69,10 +73,10 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2);
 
 				//NS = red, WE = green
 				RG:begin
+                  	nState = RY;
 					weJustWent = 1;
-					nState = RY;
 					if(maxCarWE) 
-						clock = ~clock;  //Change the clock and go to next state when there is traffic
+						NSmax = 1;
 					if(s2) 
 						p1 = 1;		//if car NS violates traffic law turn picture sensor on
 					else 
@@ -92,25 +96,30 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2);
 			endcase
 		end
 
-	always@(posedge clock or posedge reset)
+  always@(clock) //or posedge reset or NSmax or WEmax)
 		begin:RegGen
 			if(reset) 
-				state = RR;
-			else 
+				cState = RR;
+			else if(NSmax)
+				cState = RY;
+			else if(WEmax)
+				cState = YR;
+			else
 				cState = nState;
 		end
 
-	always@(state)
+  always@(cState)
 		begin:PrintOut
-			case(cState)
+			/*case(cState)
 				RR: state = 3'b000;
-				GR: state = 3'b001;
-				YR: state = 3'b010;
+				RG: state = 3'b001;
+				RY: state = 3'b010;
 				RR2: state = 3'b011;
 				RG: state = 3'b100;
 				RY: state = 3'b101;
 				default: state = 3'b111;
-			endcase
+			endcase*/
+            state = cState;
 		end
 
 endmodule;
