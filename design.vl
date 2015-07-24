@@ -1,15 +1,15 @@
 module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2);
 	
-	input start, maxCar, s1, s2, reset, clock, violated;
+	input start, maxCarNS, maxCarWE, s1, s2, reset, clock;
 	output [2:0]state;
-	output violation;
+	output p1, p2;
 	reg[2:0]state;
 	reg cState, nState, weJustWent=0;
 	parameter RR=0, GR=1, YR=2, RR2=3, RG=4, RY=5; 	//1st letter is for N & S, 2nd is for W & E
 
 	always@(state or start or maxCarNS, maxCarWE)
 		begin:Caluculate_Next_State
-			case(cState
+			case(cState)
 				//NS = red, WE = red
 				RR:begin
 					if(start)

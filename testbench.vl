@@ -11,42 +11,43 @@ module Top();
 		#200 rst = 0;
 	end
 
-	always #50 clk = ~clk //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
+	always #3000000000 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
 
 	//specift the input waveforms for maxCars
-	intial begin
-		//intially no traffic
-		maxCarsNS = 0;
-		maxCarsEW = 0;
-		sNS = 0;
-		SEW =0;
+	initial 
+		begin
+			//intially no traffic
+			maxCarsNS = 0;
+			maxCarsEW = 0;
+			sNS = 0;
+			sEW =0;
 
-		#1; //Delay to keep inputs from, changing on clock edge
+			#1; //Delay to keep inputs from, changing on clock edge
 
 
-		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
-		//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
+			//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
+			//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
 
-		#5000000000
-		maxCarsNS = $random; 
-		maxCarsEW = $random;
-		sNS = $random;
-		sEW = $random;
+			#5000000000
+			maxCarsNS = $random; 
+			maxCarsEW = $random;
+			sNS = $random;
+			sEW = $random;
 
-		#5000000000
-		maxCarsEW = $random; 
-		maxCarsNS = $random; 
-		sNS = $random;
-		sEW = $random;
+			#5000000000
+			maxCarsEW = $random; 
+			maxCarsNS = $random; 
+			sNS = $random;
+			sEW = $random;
 
-		#5000000000
-		maxCarsNS = $random; 
-		maxCarsEW = $random;
-		sNS = $random;
-		sEW = $random;
+			#5000000000
+			maxCarsNS = $random; 
+			maxCarsEW = $random;
+			sNS = $random;
+			sEW = $random;
 
-		$finish // end simulation
-	end
+			$finish; // end simulation
+		end
 
 	initial
 		begin
