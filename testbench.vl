@@ -1,24 +1,16 @@
 module Top();
-	reg GO, maxCarsNS, maxCarsEW, sNS, sWE;
-
+	reg GO, maxCarsNS, maxCarsEW, sNS, sWE, rst, clk, violate, picture;
 	reg [2:0]currState;
-	reg clk;
 
-	FSM Test1(GO, maxCarsNS, maxCarsEW sNS, sWE,rst,ss clk, currState);
-	/*initial
-		begin
+	FSM Test1(GO, maxCarsNS, maxCarsEW, sNS, sWE, rst, clk, violate, currState, picture);
 
-
-			#10
-			finish;
-		end
-	*/
 	//Reset and clock section
 	initial begin
 		clk = 0; rst=0;
 		#rst = 1;
 		#200 rst = 0;
 	end
+
 	always #50 clk = ~clk //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
 
 	//specift the input waveforms for maxCars
@@ -26,18 +18,27 @@ module Top();
 		//intially no traffic
 		maxCarsNS = 0;
 		maxCarsEW = 0;
+
 		#1; //Delay to keep inputs from, changing on clock edge
 		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
 		//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
-		#600 maxCarsNS =1; //NS has traffic EW doesn't
-		#500 maxCarsEW = 1; maxCarsNS =0; //Now EW has traffic and NS doesnt
 
-		#1000 maxCarsNS =1; maxCarsEW =1; // traffic on both sides!
+		#600 //NS has traffic EW doesn't
+		maxCarsNS = 1; 
+		maxCarsEW = 0;
+
+		#500 //Now EW has traffic and NS doesn't
+		maxCarsEW = 1; 
+		maxCarsNS =0; 
+
+		#1000 //traffic on both sides!
+		maxCarsNS =1; maxCarsEW =1; 
 
 		$finish // end simulation
 	end
+
 	initial
 		begin
-			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsWE=%b,\nrst=%b, \ncurrState=%3b, \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sWE,rst, currState, $time);
+			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsWE=%b, \nrst=%b, \nclk=%b, \nviolate=%b, \ncurrState=%3b, \npicture=%b, \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sWE, rst, clk, violate, currState, picture, $time);
 		end
 endmodule;
