@@ -1,8 +1,8 @@
 module Top();
-	reg GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, picture1, picture2;
+	reg GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, picture1, picture2, i;
   reg [2:0]currState, nextState, crrState;
 
-  FSM Test1(GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState, crrState);
+  FSM Test1(GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState);
 
 	//Reset and clock section
 	initial begin
@@ -29,24 +29,15 @@ module Top();
 
 		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
 		//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
-
-		#500
-		maxCarsNS = $random; 
-		maxCarsEW = $random;
-		sNS = $random;
-		sEW = $random;
-
-		#300
-		maxCarsEW = $random; 
-		maxCarsNS = $random; 
-		sNS = $random;
-		sEW = $random;
-
-		#100
-		maxCarsNS = $random; 
-		maxCarsEW = $random;
-		sNS = $random;
-		sEW = $random;
+        
+        for(i = 0; i < 10; i=i+1)
+          begin
+            #30
+			maxCarsNS = $random; 
+			maxCarsEW = $random;
+			sNS = $random;
+			sEW = $random;
+          end
         
 		$finish; // end simulation
 	end

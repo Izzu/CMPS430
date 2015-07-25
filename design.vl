@@ -1,15 +1,15 @@
-module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2, nState, cState);
+module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nState);
 	
 	input start, maxCarNS, maxCarWE, s1, s2, reset, clock;
-  output [2:0]state, nState, cState;
+  output [2:0]cState, nState;
 	output p1, p2;
-  reg[2:0]state, cState, nState;
+  reg[2:0]cState, nState;
 	reg weJustWent=0, NSmax=0, WEmax=0, p1, p2;
 	parameter RR=3'b000, GR=3'b001, YR=3'b010, RR2=3'b011, RG=3'b100, RY=3'b101; 	//1st letter is for N & S, 2nd is for W & E
 
   always@(cState or start or maxCarNS, maxCarWE or s1 or s2)
 		begin:Caluculate_Next_State
-			case(cState)
+          case(cState)
 				//NS = red, WE = red
 				RR:begin
                   if(start)
@@ -107,19 +107,4 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, state, p1, p2, nStat
 			else
 				cState = nState;
 		end
-
-  always@(cState)
-		begin:PrintOut
-			/*case(cState)
-				RR: state = 3'b000;
-				RG: state = 3'b001;
-				RY: state = 3'b010;
-				RR2: state = 3'b011;
-				RG: state = 3'b100;
-				RY: state = 3'b101;
-				default: state = 3'b111;
-			endcase*/
-            state = cState;
-		end
-
 endmodule;
