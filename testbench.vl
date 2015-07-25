@@ -13,7 +13,7 @@ module Top();
 		#1 rst = 0;
 	end
 
-	always #50 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
+	always #25 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
 
 	//specift the input waveforms for maxCars
 	initial 
@@ -60,6 +60,6 @@ module Top();
 
 	initial
 		begin
-			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsEW=%b, \nrst=%b, \nclk=%b, \ncurrState=%3b, \npicture1=%b,  picture2=%b, nextState=%3b \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState, $time);
+			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsEW=%b, \nrst=%b, \nclk=%b, \ncurrState=%3b, \npicture1=%b,  \npicture2=%b, \nnextState=%3b \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState, $time);
 		end
 endmodule;
