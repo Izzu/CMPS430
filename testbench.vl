@@ -41,20 +41,6 @@ module Top();
 			sEW = $random;
           end
         
-        
-		#50
-		maxCarsNS = $random; 
-		maxCarsEW = $random;
-		sNS = $random;
-		sEW = $random;
-        
-        
-		#200
-		maxCarsNS = $random; 
-		maxCarsEW = $random;
-		sNS = $random;
-		sEW = $random;
-        
 		$finish; // end simulation
 	end
 
