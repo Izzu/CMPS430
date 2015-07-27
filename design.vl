@@ -1,3 +1,5 @@
+//Travis Layne tll8197
+//Andrew Colvin awc1517
 module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nState);
 	
 	input start, maxCarNS, maxCarWE, s1, s2, reset, clock;
@@ -62,7 +64,7 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nSta
 			endcase
 		end
 
-  always@(posedge clock or posedge maxCarNS or posedge maxCarWE)
+  always@(posedge clock or posedge maxCarNS or posedge maxCarWE or reset)
 		begin:RegGen
 			if(reset) 
 				cState = RR;
