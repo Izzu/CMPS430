@@ -9,11 +9,11 @@ module Top();
 	//Reset and clock section
 	initial begin
 		clk = 0; rst=0;
-		#10000 rst = 1;
+		#100000 rst = 1;
 		#1 rst = 0;
 	end
 
-	always #25 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
+	always #10 clk = ~clk; //changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
 
 	//specift the input waveforms for maxCars
 	initial 
@@ -32,9 +32,9 @@ module Top();
 		//example for maxCars  #600 maxcars = 1;  // at time 601 maxCars =1
 		//                     #400 maxCars = 0; at 400 mroe cycles maxCars is 0
         
-        for(i = 0; i < 10; i=i+1)
-          begin
-            #30
+        for(i = 0; i < 5; i=i+1)
+          begin 
+            #10
 			maxCarsNS = $random; 
 			maxCarsEW = $random;
 			sNS = $random;
@@ -46,6 +46,6 @@ module Top();
 
 	initial
 		begin
-			$monitor("\nGO=%b, \nmaxCarsNS=%b, \nmaxCarsEW=%b, \nsNS=%b, \nsEW=%b, \nrst=%b, \nclk=%b, \ncurrState=%3b, \npicture1=%b,  \npicture2=%b, \nnextState=%3b \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, picture1, picture2, nextState, $time);
+          $monitor("\nGO=%b, \nTrafic Detector-NS=%b, Traffic Detector-EW=%b, \nSenorNS=%b, SensorEW=%b, \nrst=%b, clk=%b, \ncurrState=%3b, nextState=%3b, \npicture1=%b,  picture2=%b,  \ntime=%t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, nextState,picture1, picture2, $time);
 		end
 endmodule;
