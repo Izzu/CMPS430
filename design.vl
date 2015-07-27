@@ -1,38 +1,31 @@
 module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nState);
 	
 	input start, maxCarNS, maxCarWE, s1, s2, reset, clock;
-  output [2:0]cState, nState;
+  	output [2:0]cState, nState;
 	output p1, p2;
-  reg[2:0]cState, nState;
+  	reg[2:0]cState, nState;
 	reg weJustWent=0, NSmax=0, WEmax=0, p1, p2;
 	parameter RR=3'b000, GR=3'b001, YR=3'b010, RR2=3'b011, RG=3'b100, RY=3'b101; 	//1st letter is for N & S, 2nd is for W & E
 
-  always@(cState or start or maxCarNS, maxCarWE or s1 or s2)
+  	always@(cState or start or maxCarNS, maxCarWE or s1 or s2)
 		begin:Caluculate_Next_State
           case(cState)
 				//NS = red, WE = red
 				RR:begin
-                  if(start)
-                  begin
-                  	nState=GR;
-                  		if(!weJustWent)		//if WE just went then always let NS go					
-                          if(maxCarWE) 		//if not then check to see if max cars in WE and let them go if so
+					if(start)
+					begin
+                  		nState=GR;
+                  		if(!weJustWent)		//if WE just went then always let NS go
+                  		begin					
+                          	if(maxCarWE) 		//if not then check to see if max cars in WE and let them go if so
 								nState = RG;
 							else 
 								nState = GR;
-
-							if(s1) 
-								p2 = 1;		//if car WE violates traffic law turn picture sensor on
-							else 
-								p2 = 0;
-							if(s2) 
-								p1 = 1;		//if car NS violates traffic law turn picture sensor on
-							else 
-								p1 = 0;
+						end
 					end
                   	else
                     	nState=RR;
-					end
+				end
 
 				//NS = green, WE = red
 				GR:begin
@@ -40,33 +33,17 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nSta
 					weJustWent = 0;
 					if(maxCarWE) 
 						WEmax = 1;
-					if(s1) 
-						p2 = 1;		//if car WE violates traffic law turn picture sensor on
-					else 
-						p2 = 0;
-					end
+				end
 
 				//NS = yello, WE = red
 				YR:begin
 					nState = RR2;
-					if(s1) 
-						p2 = 1;		//if car WE violates traffic law turn picture sensor on
-					else 
-						p2 = 0;
-					end
+				end
 
 				//NS = red, WE = red
 				RR2:begin
 					nState = RG;
-					if(s1) 
-						p2 = 1;		//if car WE violates traffic law turn picture sensor on
-					else 
-						p2 = 0;
-					if(s2) 
-						p1 = 1;		//if car NS violates traffic law turn picture sensor on
-					else 
-						p1 = 0;
-					end
+				end
 
 				//NS = red, WE = green
 				RG:begin
@@ -74,30 +51,35 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nSta
 					weJustWent = 1;
 					if(maxCarWE) 
 						NSmax = 1;
-					if(s2) 
-						p1 = 1;		//if car NS violates traffic law turn picture sensor on
-					else 
-						p1 = 0;
-					end
+				end
 
 				//NS = red, WE = yellow
 				RY:begin
 					nState = RR;
-					if(s2) 
-						p1 = 1;		//if car NS violates traffic law turn picture sensor on
-					else 
-						p1 = 0;
-					end
+				end
 
 				default: nState = RR;
 			endcase
 		end
 
-  always@(posedge clock or posedge maxCarNS or posedge maxCarWE) //or posedge reset or NSmax or WEmax)
+  always@(posedge clock or posedge maxCarNS or posedge maxCarWE)
 		begin:RegGen
 			if(reset) 
 				cState = RR;
 			else
 				cState = nState;
+		end
+
+	//Turn on picture sensor whenever it detects a vehicle break the law, p1 = NS, p2 = WE
+	always@(s1 or s2)
+		begin:TakePicture
+			if(s1)
+				p1 = 1;
+			else
+				p1 = 0;
+			if(s2)
+				p2 = 1;
+			else
+				p2 = 0;
 		end
 endmodule;
