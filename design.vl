@@ -2,8 +2,8 @@
 //Travis Layne tll8197
 //Andrew Colvin awc1517
 
-module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nState);
-	input start, maxCarNS, maxCarWE, s1, s2, reset, clock;	//s1 for NS traffic violate sensor, s2 for WE traffic violate sensor
+module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nState, halfclock);
+	input start, maxCarNS, maxCarWE, s1, s2, reset, clock, halfclock;	//s1 for NS traffic violate sensor, s2 for WE traffic violate sensor
   	output [2:0]cState, nState;
 	output p1, p2;				//p1 for NS picture sensor, p2 for WE picture sensor
   	reg[2:0]cState, nState;
@@ -62,13 +62,24 @@ module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nSta
 		end
 
 
-  	always@(posedge clock or posedge maxCarNS or posedge maxCarWE or reset)
+  	always@(posedge clock or posedge reset)
 		begin:RegGen
 			if(reset) 
 				cState = RR;
 			else
 				cState = nState;
 		end
+
+	always@(posedge maxCarNS or posedge maxCarWE)
+		begin:MaxCars
+			if(halfclock)
+				cState = nState;
+			else if(cState == RR)
+				cState = nState;
+			else if(cState == RR2)
+				cState = nState;
+		end
+
 
 	//Turn on picture sensor whenever it detects a vehicle break the law, p1 = NS, p2 = WE
 	always@(s1 or s2)
