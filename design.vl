@@ -1,0 +1,96 @@
+//design
+//Travis Layne tll8197
+//Andrew Colvin awc1517
+
+module FSM(start, maxCarNS, maxCarWE, s1, s2, reset, clock, cState, p1, p2, nState, halfclock);
+	input start, maxCarNS, maxCarWE, s1, s2, reset, clock, halfclock;	//s1 for NS traffic violate sensor, s2 for WE traffic violate sensor
+  	output [2:0]cState, nState;
+	output p1, p2;				//p1 for NS picture sensor, p2 for WE picture sensor
+  	reg[2:0]cState, nState;
+	reg weJustWent=0, p1, p2;
+	parameter RR=3'b000, GR=3'b001, YR=3'b010, RR2=3'b011, RG=3'b100, RY=3'b101; 	//1st letter is for N & S, 2nd is for W & E
+
+  	always@(cState or start or maxCarNS or maxCarWE or s1 or s2)
+		begin:Caluculate_Next_State
+          case(cState)
+				//NS = red, WE = red
+				RR:begin
+					if(start)
+					begin
+                  		nState=GR;
+                  		if(!weJustWent)		//if WE just went then always let NS go
+                  		begin					
+                          	if(maxCarWE) 		//if not then check to see if max cars in WE and let them go if so
+								nState = RG;
+							else 
+								nState = GR;
+						end
+					end
+                  	else
+                    	nState=RR;
+				end
+
+				//NS = green, WE = red
+				GR:begin
+					nState = YR;
+					weJustWent = 0;
+				end
+
+				//NS = yello, WE = red
+				YR:begin
+					nState = RR2;
+				end
+
+				//NS = red, WE = red
+				RR2:begin
+					nState = RG;
+				end
+
+				//NS = red, WE = green
+				RG:begin
+                  	nState = RY;
+					weJustWent = 1;
+				end
+
+				//NS = red, WE = yellow
+				RY:begin
+					nState = RR;
+				end
+
+				default: nState = RR;
+			endcase
+		end
+
+
+  	always@(posedge clock or posedge reset)
+		begin:RegGen
+			if(reset) 
+				cState = RR;
+			else
+				cState = nState;
+		end
+
+	always@(posedge maxCarNS or posedge maxCarWE)
+		begin:MaxCars
+			if(halfclock)
+				cState = nState;
+			else if(cState == RR)
+				cState = nState;
+			else if(cState == RR2)
+				cState = nState;
+		end
+
+
+	//Turn on picture sensor whenever it detects a vehicle break the law, p1 = NS, p2 = WE
+	always@(s1 or s2)
+		begin:TakePicture
+			if(s1)
+				p1 = 1;
+			else
+				p1 = 0;
+			if(s2)
+				p2 = 1;
+			else
+				p2 = 0;
+		end
+endmodule;
