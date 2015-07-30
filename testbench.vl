@@ -15,10 +15,11 @@ module Top();
 		halfclk = 0;
 		#100 rst = 1; //restart machine after 1000 clock cycles
 		#1 rst = 0;
+      	#1000 GO = 0;
 	end
 
-  always #10 clk = ~clk; //(rate at which you switch states)changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
-  always #5 halfclk = ~halfclk; 
+  always #6 clk = ~clk; //(rate at which you switch states)changing clock frequency ---- 10 MHz clock(50 % 1 ns *2) with 50% duty-cycle
+  always #3 halfclk = ~halfclk; 
 
 	//specift the input waveforms for maxCars
 	initial 
@@ -41,7 +42,7 @@ module Top();
           begin 
             //every 10 clock cycles there is a 50% chance of traffc on both sides of the road
             //also 50% chance that each sensore goes off, which implies that someone violated the traffic law and a picture was taken
-            #10
+            #6
 			maxCarsNS = $random; 
 			maxCarsEW = $random;
 			sNS = $random;
