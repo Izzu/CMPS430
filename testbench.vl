@@ -10,7 +10,9 @@ module Top();
 
 	//Reset and clock section
 	initial begin
-		clk = 0; rst=0;
+		clk = 0; 
+		rst = 0;
+		halfclk = 0;
 		#100 rst = 1; //restart machine after 1000 clock cycles
 		#1 rst = 0;
 	end
@@ -51,6 +53,6 @@ module Top();
 
 	initial
 		begin
-          $monitor("\nStart=%b, \nTrafficDetectorNS=%b, TrafficDetectorEW=%b, \nSenorNS=%b, SensorEW=%b, \nreset=%b, clock=%b, halfclock=%b \ncurrentState=%3b, nextState=%3b, \npictureNS=%b,  pictureEW=%b,  \ntime = %t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk,halfclk,currState, nextState,picture1, picture2, $time);
+          $monitor("\nStart=%b, \nTrafficDetectorNS=%b, TrafficDetectorEW=%b, \nSenorNS=%b, SensorEW=%b, \nreset=%b, clock=%b, halfclock=%b \ncurrentState=%3b, nextState=%3b, \npictureNS=%b,  pictureEW=%b,  \ntime = %t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, halfclk, currState, nextState, picture1, picture2, $time);
 		end
 endmodule;
