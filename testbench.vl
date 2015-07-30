@@ -51,6 +51,6 @@ module Top();
 
 	initial
 		begin
-          $monitor("\nStart=%b, \nTrafficDetectorNS=%b, TrafficDetectorEW=%b, \nSenorNS=%b, SensorEW=%b, \nreset=%b, clock=%b, halfclock=%b \ncurrentState=%3b, nextState=%3b, \npictureNS=%b,  pictureEW=%b,  \ntime = %t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk, currState, nextState,picture1, picture2, $time);
+          $monitor("\nStart=%b, \nTrafficDetectorNS=%b, TrafficDetectorEW=%b, \nSenorNS=%b, SensorEW=%b, \nreset=%b, clock=%b, halfclock=%b \ncurrentState=%3b, nextState=%3b, \npictureNS=%b,  pictureEW=%b,  \ntime = %t", GO, maxCarsNS, maxCarsEW, sNS, sEW, rst, clk,halfclk,currState, nextState,picture1, picture2, $time);
 		end
 endmodule;
